@@ -181,12 +181,12 @@ body {
     box-sizing: border-box;
 }
 
-#tweet-controls {
+#tweet-controls,#reply-controls {
     text-align: right;
 		display: none;
 }
 
-#tweet-controls div {
+#tweet-controls div, #reply-controls div {
     display: inline-block;
 }
 

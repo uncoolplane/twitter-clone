@@ -43,7 +43,7 @@
 
 				<!-- STEP 5: When the user successfully inputs characters and clicks the “Tweet” button, a new tweet should be created and added to the tweet stream in the main column, using the user’s fake profile image in the top left and username/fullname. -->
 				<!-- HINT: jQuery ".prepend" method -->
-				<div class="tweet">
+				<div class="tweet" rel="id-a">
 					<div class="content">
 						<img class="avatar" src="img/damenleeturks.jpg" />
 						<strong class="fullname">My BFF</strong>
@@ -77,7 +77,6 @@
 							</div>
 							<div class="users-interact">
 								<div>
-
 									<!-- BLACK DIAMOND: Implement the Bootstrap tooltips for when you hover over a user’s avatar image -->
 									<!-- HINT: Bootstrap has good documentation =) -->
 									<img src="img/profile.jpg" />
@@ -94,12 +93,16 @@
 						<div class="reply">
 							<img class="avatar" src="img/profile.jpg" />
 							<textarea class="tweet-compose" placeholder="Reply to @mybff" /></textarea>
+							<div id="tweet-controls">
+								<div id="char-count">140</div>
+								<button class="button" id="tweet-submit">Tweet</button>
+							</div>
 						</div>
 					</div>
 				</div>
 				<!-- .tweet -->
 
-				<div class="tweet">
+				<div class="tweet" rel="id-b">
 					<div class="content">
 						<img class="avatar" src="img/funwatercat.jpg" />
 						<strong class="fullname">The Onion</strong>
@@ -135,12 +138,16 @@
 						<div class="reply">
 							<img class="avatar" src="img/profile.jpg" />
 							<textarea class="tweet-compose" placeholder="Reply to @theonion" /></textarea>
+							<div id="tweet-controls">
+								<div id="char-count">140</div>
+								<button class="button" id="tweet-submit">Tweet</button>
+							</div>
 						</div>
 					</div>
 				</div>
 				<!-- .tweet -->
 
-				<div class="tweet">
+				<div class="tweet" rel="id-c">
 					<div class="content">
 						<img class="avatar" src="img/jennyshen.jpg" />
 						<strong class="fullname">Harvard Biz Review</strong>
@@ -176,6 +183,10 @@
 						<div class="reply">
 							<img class="avatar" src="img/profile.jpg" />
 							<textarea class="tweet-compose" placeholder="Reply to @HarvardBiz" /></textarea>
+							<div id="tweet-controls">
+								<div id="char-count">140</div>
+								<button class="button" id="tweet-submit">Tweet</button>
+							</div>
 						</div>
 					</div>
 				</div>

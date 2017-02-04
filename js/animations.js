@@ -4,6 +4,11 @@ function pad(num, size) {
   return s;
 }
 
+var getRandom = function(seed) {
+  if(seed === undefined) seed = 30;
+  return Math.floor(Math.random() * (seed - 0) + 0);
+}
+
 function getCurrentDate() {
   var month = [];
   month[0] = 'Jan';
@@ -27,7 +32,9 @@ function getCurrentDate() {
   + pad(currentdate.getFullYear().toString().substr(2, 2), 2);
   return datetime;
 }
-function Tweet(avatar, fullname, username, tweettext, tweettime) {
+
+function Tweet(avatar, fullname, username, tweettext, tweettime, tweetid) {
+  this.tweetid = tweetid;
   this.avatar = avatar;
   this.fullname = fullname;
   this.username = username;
@@ -37,7 +44,7 @@ function Tweet(avatar, fullname, username, tweettext, tweettime) {
 
 function formatTweet() {
   var html = '\
-  <div class="tweet">\
+  <div class="tweet" rel="id-' + this.tweetid + '">\
   <div class="content">\
   <img class="avatar" src="' + this.avatar + '" />\
   <strong class="fullname">' + this.fullname + '</strong>\
@@ -73,6 +80,10 @@ function formatTweet() {
   <div class="reply">\
   <img class="avatar" src="' + this.avatar + '" />\
   <textarea class="tweet-compose" placeholder="Reply to @' + this.username + '" /></textarea>\
+  <div id="tweet-controls"><!--reply-controls-->\
+    <div id="char-count">140</div>\
+    <button class="button" id="tweet-submit">Tweet</button>\
+  </div>\
   </div>\
   </div>\
   </div>';
@@ -82,15 +93,18 @@ function formatTweet() {
 Tweet.prototype.formatTweet = formatTweet;
 
 $(document).ready(function() {
+  var $stream = $('#stream');
+
+  //Tweet Forms
   //avatar, fullname, username, tweettext, tweettime
-  var user = new Tweet('img/profile.jpg', 'Rebecca Hall', 'uncoolplane', null, null);
+  var user = new Tweet('img/profile.jpg', 'Rebecca Hall', 'uncoolplane', null, null, 0);
   var $composer = $('.tweet-compose');
-  var $submit = ('#tweet-submit');
-  var $charcount = $('#char-count');
-  var $controls = $('#tweet-controls');
+  var $submit = $('#tweet-submit');  //needs to be moved
+  var $charcount = $('#char-count'); //needs to be moved
 
   $composer.on('click', function() {
     $(this).css('height', "66px");
+    var $controls = $(this).next('#tweet-controls');
     $controls.show();
   });
 
@@ -112,12 +126,14 @@ $(document).ready(function() {
     }
   });
 
+//move this into "Onclick of text area before"
   $submit.on('click', function() {
     var text = $composer.val();
     user.tweettext = text;
     user.tweettime =  getCurrentDate();
+    user.tweetid = getRandom(2000);
     var html = user.formatTweet();
-    $('#stream').prepend(html);
+    $stream.prepend(html);
 
     //reset the box
     $controls.hide();
@@ -125,21 +141,34 @@ $(document).ready(function() {
     $chartcount.css('color', 'black').text(140);
   });
 
-  $('.tweet').mouseenter(function() {
-    $(this).find('.tweet-actions').show();
+  //Stream Animations
+  var $tweetcontent = $('.tweet .content');
+
+  //Hover Tweet show (Reply, Retweet, Favorite, More),use animation
+  $tweetcontent.hover(function() {
+    var $tweet = $(this).closest('.tweet');
+    var $actions = $tweet.find('.tweet-actions');
+    var $stats = $tweet.find('.stats');
+    var $replyaction = $tweet.find('.action-reply').parent();
+    var $reply = $tweet.find('.reply');
+
+    $actions.slideDown(300);
+    $stats.slideDown(500);
+
+    // Click on Reply, show Reply box
+    $replyaction.on('click', function() {
+      $reply.show();
+    });
+  }, function() {
+    var $tweet = $(this).closest('.tweet');
+    var $actions = $tweet.find('.tweet-actions');
+    var $stats = $tweet.find('.stats');
+    var $reply = $tweet.find('reply');
+
+    $actions.slideUp(500);
+    $stats.slideUp(300);
+    $reply.hide();
   });
 
-  $('.tweet').mouseleave(function() {
-    $(this).find('.tweet-actions').hide();
-  });
-
-  $('.tweet').on('click', function() {
-    $('.stats').hide();
-    $(this).find('.stats').fadeIn();
-  });
-
-  $('.action-reply').on('click', function() {
-    $('.reply').hide();
-    $(this).parent('.tweet-actions').next('.reply').fadeIn();
-  });
+  //Bootstrap tool tips when hovering avatar
 })
