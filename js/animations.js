@@ -1,3 +1,10 @@
+/*
+Remaining Tasks
+Not appending tweet correctly so hover doesn't work on new items
+Saving data
+Black Diamond (i.e. bootstrap for feedback on images)
+*/
+
 function pad(num, size) {
   var s = num+ "";
   while (s.length < size) s = "0" + s;
@@ -99,16 +106,38 @@ $(document).ready(function() {
   //avatar, fullname, username, tweettext, tweettime
   var user = new Tweet('img/profile.jpg', 'Rebecca Hall', 'uncoolplane', null, null, 0);
   var $composer = $('.tweet-compose');
-  var $submit = $('#tweet-submit');  //needs to be moved
-  var $charcount = $('#char-count'); //needs to be moved
 
   $composer.on('click', function() {
-    $(this).css('height', "66px");
-    var $controls = $(this).next('#tweet-controls');
+    var $current = $(this);
+    $current.css('height', "66px");
+    var $controls = $current.next('#tweet-controls');
     $controls.show();
-  });
 
-  $composer.on('keyup', function() {
+    var $submit = $controls.find('#tweet-submit');
+    var $charcount = $controls.find('#char-count');
+
+    //move this into "Onclick of text area before"
+    $submit.on('click', function() {
+      var text = $current.val();
+      user.tweettext = text;
+      user.tweettime =  getCurrentDate();
+      user.tweetid = getRandom(2000);
+      var html = user.formatTweet();
+      $stream.prepend(html);
+
+      //reset the box
+      $controls.hide();
+      $current.val('').css('height', "33px");
+      $charcount.css('color', 'black').text(140);
+    });
+
+  }).on('keyup', function() {
+    var $controls = $(this).next('#tweet-controls');
+    var $submit = $controls.find('#tweet-submit');
+    var $charcount = $controls.find('#char-count');
+
+    $submit.css('background-color', 'red');
+
     var text = $(this).val();
     var len = text.length;
     var newlength = 140-len;
@@ -124,21 +153,6 @@ $(document).ready(function() {
     } else {
       $submit.prop('disabled', false);
     }
-  });
-
-//move this into "Onclick of text area before"
-  $submit.on('click', function() {
-    var text = $composer.val();
-    user.tweettext = text;
-    user.tweettime =  getCurrentDate();
-    user.tweetid = getRandom(2000);
-    var html = user.formatTweet();
-    $stream.prepend(html);
-
-    //reset the box
-    $controls.hide();
-    $composer.val('').css('height', "33px");
-    $chartcount.css('color', 'black').text(140);
   });
 
   //Stream Animations
